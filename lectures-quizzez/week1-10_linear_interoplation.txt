@@ -1,0 +1,14 @@
+q1
+
+
+the green book STOP
+my blue book STOP
+his green house STOP
+book STOP
+
+q(book|the, green) = ?
+
+q(book|the, green) = 1/3 * count(the,green,book)/count(the,green) + 1/3 * count(green,book) / count(green) + 1/3 * count(book)/count() = 
+					 1/3 * 1 / 1 + 1/3 * 1 / 2 + 1/3 * 3 / 14 = 
+
+

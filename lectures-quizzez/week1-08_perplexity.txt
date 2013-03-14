@@ -1,0 +1,22 @@
+Perplexity = 2^(-l)
+l = 1/M * sum(log2(p(si)))
+p(si) = q(1|-1,0) * q(2|0,1) * q(3|1,2) ...
+
+
+q(the|*,*)
+q(dog|*,the)
+q(cat|*,the)
+q(walks|the,cat)
+q(STOP|cat,walks)
+q(runs|the,dog)
+q(STOP|dog,runs)
+
+the dog runs STOP
+1 * 0.5 * 1 * 1   = 0.5
+the cat walks STOP
+1 * 0.5 * 1 * 1   = 0.5
+the dog runs STOP
+1 * 0.5 * 1 * 1   = 0.5
+
+1/12 * -3 = -0.25 = l
+p = 2^0.25

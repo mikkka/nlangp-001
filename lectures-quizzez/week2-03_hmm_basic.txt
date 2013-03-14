@@ -1,0 +1,17 @@
+Say we are given a tagset ={D,N}, a vocabulary ={the,dog}, and a hidden Markov model. The HMM has transition parameters
+q(D|∗,∗)=1
+q(N|∗,D)=1
+q(STOP|D,N)=1
+q(s|u,v)=0 for all other q params
+
+and emission parameters
+e(the|D)=0.9
+e(dog|D)=0.1
+e(dog|N)=1 
+
+Under this model, how many pairs of sequences x1…xn,y1…yn+1 satisfy p(x1,...xn,y1,...yn+1)>0?
+
+
+q(D|*.*) q(N|∗,D) q(STOP|D,N)
+the        dog
+dog

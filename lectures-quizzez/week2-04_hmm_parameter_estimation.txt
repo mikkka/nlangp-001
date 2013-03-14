@@ -1,0 +1,21 @@
+q1
+
+Consider the following training corpus of tagged sentences
+the dog barks → D N V STOP
+the cat sings → D N V STOP
+Say we compute the maximum-likelihood estimates of a trigram hidden Markov model from this data. What is the value for the parameter e(cat|N) of this HMM?
+
+
+e(cat|N) = count(cat, N) / count(N) = 1 / 2
+
+q2
+
+Consider the following training corpus of tagged sentences
+
+the dog barks → D N V STOP
+the cat sings → D N V STOP
+
+Say we estimate the parameters for a hidden Markov model from this data using linear interpolation with λi=1/3 for i=1…3. 
+What is the value of the parameter q(STOP|N,V) under this model?
+
+q(STOP|N,V) = 1/3 * count(N, V, STOP) / count(N, V) + 1/3 * count(V, STOP) / count(V) + 1/3 * count(STOP) / count() = 1/3 * 2/2 + 1/3 * 2/2 + 1/3 * 2/8 = 2/3 + 1/12 = 3/4

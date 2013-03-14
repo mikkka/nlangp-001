@@ -1,0 +1,33 @@
+q1
+
+Count(the) = 70
+|{w:c(the,w)>0}| = 15
+c∗(the,w) = c(the,w) − 0.3
+
+missing probability mass, α(the)?
+
+
+α(the) = 15 * 0.3 / 70 = 0.064
+
+q2
+Let's return to a smaller version of our corpus. 
+
+the book STOP
+his house STOP
+This time we compute a bigram language model using Katz back-off with c∗(v,w)=c(v,w)−0.5. 
+
+What is the value of qBO(book|his) estimated from this corpus?
+
+count(his) = 5
+count(his, house) = 1
+|count(his, *) = 0) = 4
+
+a(his) = 1 * 0.5 / 1 = 0.1
+
+q(the) = 1/6
+q(book) = 1/6
+q(STOP) = 2/6
+q(his) = 1/6
+*q(house) - 1/6
+
+qBO(book|his) = a(his) * ((q(his)) / (q(the) + q(book) + q(stop) + q(his))) = 0.5 * / ((1/6) / (5/6)) = 0.1
