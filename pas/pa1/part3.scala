@@ -2,8 +2,8 @@ import scala.collection.mutable.Map
 
 //CONSTS!!!
 val h1 = 0.33
-val h2 = 0.33
-val h3 = 0.34
+val h2 = 0.34
+val h3 = 0.33
 
 val hasNumberPattern = ".*\\d.*".r.pattern
 //
