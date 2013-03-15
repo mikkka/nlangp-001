@@ -86,9 +86,13 @@ def q(t: (String, String, String)) = {
   h1 * grams3.getOrElse(t, 0) / grams2((t._1, t._2)) + h2 * grams2((t._2, t._3)) / grams1(t._2) + h3 * grams1(t._3) / totalGrams1
 }
 
-//println("train data loaded")
+def memq = mem(q)
+
 /*
+println("train data loaded")
 //test q print
+println("example q")
+
 println(q(("*", "*", "O")))
 println(q(("*", "O", "O")))
 println(q(("O", "O", "O")))
@@ -112,12 +116,3 @@ println(q(("I-GENE", "O", "I-GENE")))
 println(q(("O", "I-GENE", "STOP")))
 println(q(("I-GENE", "O", "STOP")))
 */
-
-
-
-
-
-
-
-
-
