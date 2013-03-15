@@ -6,9 +6,9 @@ import scala.collection.mutable.Map
 // word -> tag
 
 //CONSTS!!!
-val h1 = 0.4
-val h2 = 0.4
-val h3 = 0.2
+val h1 = 0.33
+val h2 = 0.33
+val h3 = 0.34
 //
 
 def mem[A,B](f: A => B) = new Function[A,B] {
@@ -84,7 +84,7 @@ def memq = mem(q)
 def tagSentence(sentence: Vector[(String, String)]) = {
   val xs = sentence.drop(2).dropRight(1)
   val n = xs.length
-  println("tagging sentence : " + xs)
+  //println("tagging sentence : " + xs)
 
   var pi = scala.collection.mutable.Map((0,"*","*") -> (1.0,"*"))
 
@@ -93,38 +93,45 @@ def tagSentence(sentence: Vector[(String, String)]) = {
     else List("I-GENE", "O")
 
   for(k <- 1 to n) {
-    println(k)
+    //println(k)
     val xk = xs(k - 1)._1
     for(
       u <- S(k - 1);
       v <- S(k)
     ) {
-      println(u + " " + v + " " + xk)
+      //println(u + " " + v + " " + xk)
       pi +=(
       (k, u, v) -> 
       (for(w <- S(k - 2)) yield {
         val piw = pi(k-1,w,u)._1 * q((w,u,v)) * exy(xk,v)
 
-        println(w + " " + piw)
+        //println(w + " " + piw)
         (piw, w)
       }).maxBy(_._1))
-      println("")
+      //println("")
     }
-    println("")
+    //println("")
   }
 
-  println(pi)
+  //println(pi)
 
-  val tail = (for(
+  //backtracking
+  val tagsTail = (for(
     u <- S(n - 1);
     v <- S(n)
   ) yield {
     ((pi(n, u, v)._1 * q(u, v, "STOP")) -> (u, v))
-  }).maxBy(_._1)
+  }).maxBy(_._1)._2
+  val tags = new Array[String](n)
+  tags(n-1) = tagsTail._2
+  tags(n-2) = tagsTail._1
 
-  println(tail)
+  for(k <- (n - 2) to 1 by -1) {
+    val i = k - 1
+    tags(i) = pi(k + 2, tags(i + 1), tags(i + 2))._2
+  } 
 
-  sentence
+  xs.zipWithIndex.map(p => (p._1._1, tags(p._2)))
 }
 /*
 println("train data loaded")
@@ -161,11 +168,15 @@ val wordsForTag = scala.io.Source.fromFile(args(1)).getLines().map{line =>
   else ("" -> "STOP")
 }.toList
 
-val sentencesForTag = toSentences(wordsForTag).par
-//val taggedSentences = sentencesForTag.par.map(tagSentence)
-//taggedSentences.foreach(println(_))
-println(tagSentence(sentencesForTag(0)))
+val sentencesForTag = toSentences(wordsForTag)
+val taggedSentences = sentencesForTag.map(tagSentence)
+taggedSentences.foreach{s =>
+  s.foreach(wt => println(wt._1 + " " + wt._2))
+  println("")
+}
+//println(tagSentence(sentencesForTag(0)))
 //println(tagSentence(sentencesForTag(1)))
+//println(tagSentence(sentencesForTag(2)))
 
 
 
