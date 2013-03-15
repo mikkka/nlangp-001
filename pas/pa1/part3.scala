@@ -34,19 +34,19 @@ def toSentences(words: List[(String,String)]) = {
   iter(Vector.empty, words)
 }
 
-def wordsReplace(words: List[(String, String)], rareWords: Set[String], replacement: String) = words.map(p => 
-  if(rareWords.contains(p._1)) (replacement -> p._2)
+def wordsReplace(words: List[(String, String)], rareWords: Set[String]) = words.map(p => 
+  if(rareWords.contains(p._1)) (wordClass(p._1) -> p._2)
   else p
 ).toList
 
 def wordClass(word: String) = 
   if(word.forall(_.isUpper)) "_RARE_UC_"
-  else if(hasNumberPattern.matcher(word).matches) "_RARE_NUM_"
+  else if(word.exists(_.isDigit)) "_RARE_NUM_"
   else if(word.last.isUpper) "_RARE_LUC_"
   else "_RARE_"
 
 val rareWords = words.map(_._1).groupBy(x => x).filter(_._2.size < 5).keySet
-val words_1 = wordsReplace(words, rareWords, "_RARE_")
+val words_1 = wordsReplace(words, rareWords)
 
 val wordsCounts = countWords(words_1) // unigrams!
 val tagCounts = words_1.groupBy(_._2).map(p => (p._1 -> p._2.size))
@@ -61,7 +61,7 @@ val grams3 = parSentences.map(_.map(_._2).sliding(3)).flatMap(p => p).collect{ca
 
 def exy(word: String, tag: String) = {
   if(wordsCounts.contains(word)) wordsCounts(word).getOrElse(tag, 0) * 1.0 / tagCounts(tag)
-  else wordsCounts("_RARE_")(tag) * 1.0 / tagCounts(tag)
+  else wordsCounts(wordClass(word))(tag) * 1.0 / tagCounts(tag)
 }
 
 def argmaxyexy(word: String) = {
