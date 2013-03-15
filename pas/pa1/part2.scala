@@ -1,9 +1,4 @@
 import scala.collection.mutable.Map
-//import scala.collection.mutable.ListBuffer
-
-//type Sentence = scala.collection.mutable.ListBuffer[(String,String)]
-//lowercase word?
-// word -> tag
 
 //CONSTS!!!
 val h1 = 0.33
@@ -55,16 +50,7 @@ val totalGrams1 = grams1.foldLeft(0){_ + _._2}
 
 val grams2 = parSentences.map(_.map(_._2).sliding(2)).flatMap(p => p).collect{case Vector(x,y) => (x,y)}.groupBy(p => p).map(p => (p._1 -> p._2.size)).seq
 val grams3 = parSentences.map(_.map(_._2).sliding(3)).flatMap(p => p).collect{case Vector(x,y,z) => (x,y,z)}.groupBy(p => p).map(p => (p._1 -> p._2.size)).seq
-/*
-println("grams1")
-println(grams1)
 
-println("grams2")
-println(grams2)
-
-println("grams3")
-println(grams3)
-*/
 def exy(word: String, tag: String) = {
   if(wordsCounts.contains(word)) wordsCounts(word).getOrElse(tag, 0) * 1.0 / tagCounts(tag)
   else wordsCounts("_RARE_")(tag) * 1.0 / tagCounts(tag)
@@ -84,7 +70,6 @@ def memq = mem(q)
 def tagSentence(sentence: Vector[(String, String)]) = {
   val xs = sentence.drop(2).dropRight(1)
   val n = xs.length
-  //println("tagging sentence : " + xs)
 
   var pi = scala.collection.mutable.Map((0,"*","*") -> (1.0,"*"))
 
@@ -93,27 +78,19 @@ def tagSentence(sentence: Vector[(String, String)]) = {
     else List("I-GENE", "O")
 
   for(k <- 1 to n) {
-    //println(k)
     val xk = xs(k - 1)._1
     for(
       u <- S(k - 1);
       v <- S(k)
     ) {
-      //println(u + " " + v + " " + xk)
       pi +=(
       (k, u, v) -> 
       (for(w <- S(k - 2)) yield {
         val piw = pi(k-1,w,u)._1 * q((w,u,v)) * exy(xk,v)
-
-        //println(w + " " + piw)
         (piw, w)
       }).maxBy(_._1))
-      //println("")
     }
-    //println("")
   }
-
-  //println(pi)
 
   //backtracking
   val tagsTail = (for(
@@ -133,34 +110,6 @@ def tagSentence(sentence: Vector[(String, String)]) = {
 
   xs.zipWithIndex.map(p => (p._1._1, tags(p._2)))
 }
-/*
-println("train data loaded")
-//test q print
-println("example q")
-
-println(q(("*", "*", "O")))
-println(q(("*", "O", "O")))
-println(q(("O", "O", "O")))
-println(q(("O", "O", "STOP")))
-println(q(("*", "O", "STOP")))
-
-println(q(("*", "*", "I-GENE")))
-println(q(("*", "I-GENE", "I-GENE")))
-println(q(("I-GENE", "I-GENE", "I-GENE")))
-println(q(("I-GENE", "I-GENE", "STOP")))
-println(q(("*", "I-GENE", "STOP")))
-
-println(q(("O", "I-GENE", "I-GENE")))
-println(q(("O", "O", "I-GENE")))
-println(q(("I-GENE", "I-GENE", "O")))
-println(q(("I-GENE", "O", "O")))
-
-println(q(("O", "I-GENE", "O")))
-println(q(("I-GENE", "O", "I-GENE")))
-
-println(q(("O", "I-GENE", "STOP")))
-println(q(("I-GENE", "O", "STOP")))
-*/
 
 val wordsForTag = scala.io.Source.fromFile(args(1)).getLines().map{line => 
   val str = line.trim()
@@ -174,9 +123,5 @@ taggedSentences.foreach{s =>
   s.foreach(wt => println(wt._1 + " " + wt._2))
   println("")
 }
-//println(tagSentence(sentencesForTag(0)))
-//println(tagSentence(sentencesForTag(1)))
-//println(tagSentence(sentencesForTag(2)))
-
 
 
