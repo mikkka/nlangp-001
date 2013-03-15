@@ -1,23 +1,33 @@
-* * the dog barks
- 	D    D    D
- 	N    N    N
- 	V    V    V
+q1
+Say we are given a tag set S={D,N,V,P} and a hidden Markov model with parameters
 
+q(D|N,P)=0.4
+q(D|w,P)=0 for w != N
+e(the|D)=0.6 
 
+We are also given the sentence
+
+Ella walks to the red house
+
+Say the dynamic programming table for this sentence has the following entries
+π(3,D,P)=0.1, 
+π(3,N,P)=0.2
+π(3,V,P)=0.01, 
+π(3,P,P)=0.5 
+
+What will be the value of π(4,P,D)?
 
 
 w = S(k-2)
-p(k, u,v) = max(p(k-1, w,u) * q(v|w,u) * e(xk|v))
-
+p(k,u,v) = max(p(k-1,w,u) * q(v|w,u) * e(xk|v))
 
 				w	  u	    v
 x1 x2 x3 ... x(k-2) x(k-1) x(k)
 
-
+            P   D
 	1	2	3	4
 Ella walks to the red house
 
 
-p(4, P,D) = max(p(3, w,P) * q(D|w,P) * e(the|D))
-				p(3, N,P) * q(D|N,P) * e(the|D)
-					0.2   *   0.4    *    0.6
+p(4,P,D) = max(p(3,w,P) * q(D|w,P) * e(4|D)) = max(p(3,w,P) * q(D|w,P)) * e(the|D) = p(3,N,P) * q(D|N,P) * 0.6 = 0.2 * 0.4 * 0.6
+            w

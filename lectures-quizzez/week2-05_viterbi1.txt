@@ -1,0 +1,25 @@
+q1
+
+We are given a hidden Markov model with transition parameters
+q(D|∗,∗)=1 
+q(N|∗,D)=1
+q(V|D,N)=1 
+q(STOP|N,V)=1 
+
+and emission parameters
+e(the|D)=0.8
+e(dog|D)=0.2
+e(dog|N)=0.8, 
+e(the|N)=0.
+e(barks|V)=1.0 
+
+Say we have the sentence
+
+the dog barks
+
+What is the value of π(3,N,V)?
+
+* * the dog barks
+    D   N   V
+
+π(3,N,V) = q(D|*,*) * q(N|∗,D) * q(V|D,N) * e(the|D) * e(dog|N) * e(barks|V) = 0.64
