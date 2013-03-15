@@ -86,7 +86,7 @@ def tagSentence(sentence: Vector[(String, String)]) = {
       pi +=(
       (k, u, v) -> 
       (for(w <- S(k - 2)) yield {
-        val piw = pi(k-1,w,u)._1 * q((w,u,v)) * exy(xk,v)
+        val piw = pi(k-1,w,u)._1 * memq((w,u,v)) * exy(xk,v)
         (piw, w)
       }).maxBy(_._1))
     }
@@ -97,7 +97,7 @@ def tagSentence(sentence: Vector[(String, String)]) = {
     u <- S(n - 1);
     v <- S(n)
   ) yield {
-    ((pi(n, u, v)._1 * q(u, v, "STOP")) -> (u, v))
+    ((pi(n, u, v)._1 * memq(u, v, "STOP")) -> (u, v))
   }).maxBy(_._1)._2
   val tags = new Array[String](n)
   tags(n-1) = tagsTail._2
