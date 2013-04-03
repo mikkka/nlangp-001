@@ -22,7 +22,7 @@ case class Terminal(tag: String, word: String) extends Node {
 
   def map(f: (Node) => Node): Node = f(this)
 
-  override def toString = s"""[$tag, $word]"""
+  override def toString = s"""["$tag", "$word"]"""
 }
 case class NonTerminal(tag: String, lft: Node, rgt: Node) extends Node {
   def filter(f: (Node) => Boolean): List[Node] =
@@ -33,5 +33,5 @@ case class NonTerminal(tag: String, lft: Node, rgt: Node) extends Node {
 
   def map(f: (Node) => Node): Node = f(NonTerminal(tag, f(lft), f(rgt)))
 
-  override def toString = s"""[$tag, $lft, $rgt]"""
+  override def toString = s"""["$tag", $lft, $rgt]"""
 }
