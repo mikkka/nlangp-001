@@ -9,13 +9,17 @@ import scala.util.parsing.combinator._
 class TreeParser extends JavaTokenParsers {
   def node : Parser[Node] = terminal | nonTerminal
 
-  def terminal : Parser[Terminal] = "["~stringLiteral~","~stringLiteral~"]" ^^
-    {case "["~tag~","~word~"]" => Terminal(tag, word)}
+  def terminal : Parser[Terminal] = "["~value~","~value~"]" ^^
+    {case "["~tag~","~word~"]" => Terminal(trim(tag), trim(word))}
 
-  def nonTerminal : Parser[NonTerminal] = "["~stringLiteral~","~node~","~node~"]" ^^
-    {case "["~tag~","~lft~","~rgt~"]" => NonTerminal(tag, lft, rgt) }
+  def nonTerminal : Parser[NonTerminal] = "["~value~","~node~","~node~"]" ^^
+    {case "["~tag~","~lft~","~rgt~"]" => NonTerminal(trim(tag), lft, rgt) }
+
+  def value : Parser[String] = stringLiteral
 
   def toTree(line: String) = parseAll(node, line).get
+
+  def trim(s: String) = s.dropRight(1).drop(1)
 }
 
 
