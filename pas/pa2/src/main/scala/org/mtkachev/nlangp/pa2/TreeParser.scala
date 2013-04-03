@@ -7,9 +7,6 @@ import scala.util.parsing.combinator._
  * Time: 19:13
  */
 class TreeParser extends JavaTokenParsers {
-  //def value : Parser[Any] = arr | stringLiteral
-  //def arr   : Parser[Any] = "["~repsep(value, ",")~"]"
-
   def node : Parser[Node] = terminal | nonTerminal
 
   def terminal : Parser[Terminal] = "["~stringLiteral~","~stringLiteral~"]" ^^
