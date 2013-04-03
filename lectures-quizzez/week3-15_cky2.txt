@@ -1,0 +1,30 @@
+q1
+
+Consider the sentence from the previous slide
+
+the dog saw the man with the telescope
+
+Say we are given a PCFG with the rules
+
+q(NP→D N)=0.5
+
+q(NP→N)=0.5
+
+q(D→the)=1.0
+
+q(N→dog)=0.1
+
+q(N→cat)=0.9
+
+What is the value for π(1,2,NP)?
+
+
+
+   NP
+ D   N   
+the dog saw the man with the telescope
+
+
+1.0 * 0.1 * 0.5
+
+q2

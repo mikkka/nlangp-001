@@ -1,0 +1,53 @@
+q1
+
+Consider the following PCFG
+
+q(S→NP VP)=0.9	q(S→NP)=0.1	q(NP→D N)=1	q(VP→V)=1
+q(D→the)=0.8	q(D→a)=0.2	q(N→cat)=0.5	q(N→dog)=0.5
+q(V→sings)=1			
+			
+				S
+		NP 			VP
+	D 		N 		V
+	the		cat 	sings
+
+
+
+Say we are given a parse tree
+What is the probability of this parse tree under the above PCFG?
+
+q(S→NP VP) * q(NP→D N) * q(D→the) * q(N→cat) * q(VP→V) * q(V→sings) = 0.9 * 1 * 0.8 * 0.5 * 1 * 1
+
+q2
+
+Consider the following PCFG with start symbol "S"
+
+q(S  -> NP VP)=1.0	
+
+q(VP -> VP PP)=0.9	
+q(VP -> V NP)=0.1
+
+q(NP -> NP PP)=0.5	
+q(NP -> N)=0.5	
+
+q(PP -> P NP)=1.0
+
+q(N  -> Ted)=0.2	
+q(N  -> Jill)=0.2	
+q(N  -> town)=0.6
+
+q(V  -> saw)=1.0
+
+q(P   -> in)=1.0	
+Say we are given the sentence
+
+Ted saw Jill in town.
+
+What is the highest probability for any parse tree under this PCFG?
+
+
+ N   V   N    P   N
+Ted saw Jill in town.
+
+
+

@@ -1,0 +1,27 @@
+q1
+
+tree1
+*NP -> DT N'
+*DT -> a
+*N' -> JJ N'
+*JJ -> fast
+N' -> NN N'
+*NN -> car
+*N' -> NN
+*NN -> mechanic
+
+tree2
+*NP -> DT N'
+*T -> a
+N' -> N' N'
+*N' -> JJ N'
+*JJ -> fast
+N' -> NN
+*NN -> car
+*N' -> NN
+*NN -> mechanic
+
+
+N' -> NN N'
+
+N' -> N' N' ;  N' -> NN

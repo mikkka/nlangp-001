@@ -1,0 +1,17 @@
+q1
+
+N(Mary)
+NP(Mary)
+V(said)
+COMP(that)
+N(John)
+NP(Jonh)
+V(Saw)
+N(Bill)
+NP(Bill)
+
+VP(saw Bill) 			-> V(Saw) NP(Bill) -> VP(saw)
+S(John .. Bill) 		-> NP(John) VP(saw) -> S(saw)
+SBAR(that .. Bill) 		-> COMP(that) S(saw) -> SBAR(that)
+VP(said .. Bill) 		-> V(said) SBAR(that) -> VP(said)
+S(Mary .. Bill) 		-> NP(Maru) VP(said) -> S(said)

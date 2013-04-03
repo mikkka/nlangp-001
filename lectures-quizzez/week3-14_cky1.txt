@@ -1,0 +1,18 @@
+q1
+
+Consider the following PCFG not in Chomsky normal form
+
+q(S→N VP)=0.5	q(VP→V N)=0.6
+q(VP→V N PP)=0.4	q(PP→P N)=1.0
+q(N→dog)=1.0	q(P→in)=1.0
+q(V→saw)=1.0	
+We then convert to Chomsky normal form by changing the rules to
+
+S → N VP	VP → V N
+VP → V N/PP	N/PP → N PP
+PP → P N	N → dog
+P → in	V → saw
+If we want the new PCFG to be equivalent to the old PCFG and we are told q(N/PP→N PP)=1.0, what should be the value of q(VP→V N/PP)?
+
+
+q(VP→V N PP)=0.4 -> q(VP -> V N/PP) = 0.4 q(N/PP -> N PP) = 1
