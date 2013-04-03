@@ -10,6 +10,7 @@ abstract class Node {
 
   def filter(f: Node => Boolean): List[Node]
   def toList(): List[Node]
+  def map(f: Node => Node): Node
 }
 
 case class Terminal(tag: String, word: String) extends Node {
@@ -19,6 +20,8 @@ case class Terminal(tag: String, word: String) extends Node {
 
   def toList(): List[Node] = List(this)
 
+  def map(f: (Node) => Node): Node = f(this)
+
   override def toString = s"""[$tag, $word]"""
 }
 case class NonTerminal(tag: String, lft: Node, rgt: Node) extends Node {
@@ -27,6 +30,8 @@ case class NonTerminal(tag: String, lft: Node, rgt: Node) extends Node {
     else lft.filter(f) ::: rgt.filter(f)
 
   def toList(): List[Node] = this :: (lft.toList() ::: rgt.toList())
+
+  def map(f: (Node) => Node): Node = f(NonTerminal(tag, f(lft), f(rgt)))
 
   override def toString = s"""[$tag, $lft, $rgt]"""
 }
