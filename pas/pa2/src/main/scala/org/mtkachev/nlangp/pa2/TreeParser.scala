@@ -10,16 +10,14 @@ class TreeParser extends JavaTokenParsers {
   def node : Parser[Node] = terminal | nonTerminal
 
   def terminal : Parser[Terminal] = "["~value~","~value~"]" ^^
-    {case "["~tag~","~word~"]" => Terminal(trim(tag), trim(word))}
+    {case "["~tag~","~word~"]" => Terminal(tag, word)}
 
   def nonTerminal : Parser[NonTerminal] = "["~value~","~node~","~node~"]" ^^
-    {case "["~tag~","~lft~","~rgt~"]" => NonTerminal(trim(tag), lft, rgt) }
+    {case "["~tag~","~lft~","~rgt~"]" => NonTerminal(tag, lft, rgt) }
 
-  def value : Parser[String] = stringLiteral
+  def value : Parser[String] = stringLiteral ^^ (_.dropRight(1).drop(1))
 
   def toTree(line: String) = parseAll(node, line).get
-
-  def trim(s: String) = s.dropRight(1).drop(1)
 }
 
 
