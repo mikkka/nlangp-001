@@ -8,7 +8,7 @@ import collection.mutable
  * Time: 19:13
  */
 object CKY {
-  def dtParse(sentence: Vector[String], params: Parameters): Node = {
+  def dtParse(sentence: Array[String], params: Parameters): Node = {
     def word(i: Int) = sentence(i - 1)
 
     val pi = mutable.Map.empty[(Int, Int, String), (Double, Node)]
