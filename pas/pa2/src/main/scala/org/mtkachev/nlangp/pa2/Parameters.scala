@@ -23,7 +23,10 @@ class Parameters(trees: List[Node]) {
 
   lazy val rulesForTag = binaryCounts.keySet.groupBy(_.from)
 
-  def q(tag: String, word: String) = 0.0
+  def q(rule: UnaryRule) = {
+    val trueRule = if (wordsCounts.contains(rule.to)) UnaryRule(rule.from, rule.to) else UnaryRule(rule.from, "_RARE_")
+    1.0 * unaryCounts(trueRule) / nonTerminalCounts(trueRule.from)
+  }
   def q(rule: BinaryRule) = 1.0 * binaryCounts.getOrElse(rule, 0) / nonTerminalCounts(rule.from)
 }
 
