@@ -23,8 +23,6 @@ object Part2 extends App {
 
 
   val parameters = new Parameters(trees)
-
-  //println(CKY.dtParse("Who was the lead actress in the movie `` Sleepless in Seattle << ?".split(" "), parameters))
   val sentences = scala.io.Source.fromFile(args(1)).getLines().map(_.split(" "))
   val tagged = sentences.map(CKY.dtParse(_, parameters))
 
