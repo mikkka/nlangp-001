@@ -17,6 +17,14 @@ class Parameters(trees: List[Node]) {
   lazy val nonTerminalCounts = flatTrees.map(_.tag).groupBy(w => w).map(p => ((p._1), (p._2).size))
   lazy val unaryCounts = allUnary.groupBy(w => w).map(p => ((p._1), (p._2).size))
   lazy val binaryCounts = allBinary.groupBy(w => w).map(p => ((p._1), (p._2).size))
+
+  lazy val allTerminalTags = unaryCounts.keySet.map(_.from).toSet
+  lazy val allNonTerminalTags = binaryCounts.keySet.map(_.from).toSet
+
+  lazy val rulesForTag = binaryCounts.keySet.groupBy(_.from)
+
+  def q(tag: String, word: String) = 0.0
+  def q(rule: BinaryRule) = 1.0 * binaryCounts.getOrElse(rule, 0) / nonTerminalCounts(rule.from)
 }
 
 
