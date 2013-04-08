@@ -8,12 +8,15 @@ package org.mtkachev.nlangp.pa2
 class Parameters(trees: List[Node]) {
   lazy val flatTrees = trees.flatMap(_.toList())
 
-  lazy val allUnary = flatTrees.collect{case n: Terminal => n}
-  lazy val allBinary = flatTrees.collect{case n: NonTerminal => n}
-  lazy val nonTerminalCounts = flatTrees.map(_.tag).groupBy(w => w).map(p => ((p._1), (p._2).size))
+  lazy val allUnary = flatTrees.collect{case n: Terminal => n}.map(n => UnaryRule(n.tag, n.word))
+  lazy val allBinary = flatTrees.collect{case n: NonTerminal => n}.map(n => BinaryRule(n.tag, n.lft.tag, n.rgt.tag))
 
-  lazy val wordsCounts = allUnary.map(_.word).groupBy(w => w).map(p => ((p._1), (p._2).size))
+  lazy val wordsCounts = allUnary.map(_.to).groupBy(w => w).map(p => ((p._1), (p._2).size))
   lazy val rareWords = wordsCounts.filter(p => p._2 < 5)
+
+  lazy val nonTerminalCounts = flatTrees.map(_.tag).groupBy(w => w).map(p => ((p._1), (p._2).size))
+  lazy val unaryCounts = allUnary.groupBy(w => w).map(p => ((p._1), (p._2).size))
+  lazy val binaryCounts = allBinary.groupBy(w => w).map(p => ((p._1), (p._2).size))
 }
 
 
