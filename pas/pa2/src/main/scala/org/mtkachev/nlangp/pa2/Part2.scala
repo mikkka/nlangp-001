@@ -1,5 +1,7 @@
 package org.mtkachev.nlangp.pa2
 
+import java.io.PrintWriter
+
 /**
  * User: mick
  * Date: 08.04.13
@@ -21,4 +23,14 @@ object Part2 extends App {
 
 
   val parameters = new Parameters(trees)
+
+  //println(CKY.dtParse("Who was the lead actress in the movie `` Sleepless in Seattle << ?".split(" "), parameters))
+  val sentences = scala.io.Source.fromFile(args(1)).getLines().map(_.split(" "))
+  val tagged = sentences.map(CKY.dtParse(_, parameters))
+
+  Some(new PrintWriter(args(2))).foreach{p =>
+    tagged.foreach(node => p.write(node.toString + "\n"))
+    p.close
+  }
+
 }
