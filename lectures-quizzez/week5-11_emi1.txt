@@ -1,0 +1,22 @@
+q1.
+
+Consider the sentence pair from the last slide
+
+e=And the program has been implemented
+
+f=Le programme a ete mis en application
+
+and say we are given the alignment a=⟨2,3,1,0,6,6,6⟩.
+
+List the maximum-likelihood estimates (to three decimal places, separated by a space) for the parameters
+
+tML(Le|the), tML(Le|And), tML(mis|implemented), tML(en|implemented), tML(application|implemented), and tML(application|NULL).
+
+tML(Le|the) = 1
+tML(Le|And) = 0
+tML(mis|implemented) = 1 / 3
+tML(en|implemented) = 1 / 3 
+tML(application|implemented) = 1 / 3
+tML(application|NULL) = 0
+
+count(implemented) == count of pairs with implemented

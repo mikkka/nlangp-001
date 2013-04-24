@@ -1,0 +1,24 @@
+q1.
+
+Consider the sentence pair
+
+e(1)=the dog barks
+
+f(1)=abarks adog athe
+
+and say we have the following parameters
+
+t(abarks|the)=0.1	
+t(abarks|dog)=0.4	
+t(abarks|barks)=0.3	
+t(abarks|NULL)=0.2
+
+q(3|1,3,3)=0.1	
+q(2|1,3,3)=0.4	
+q(1|1,3,3)=0.4	
+q(0|1,3,3)=0.1
+
+What is the value of δ(1,1,3)?
+
+δ(1,1,3) = q(3|1,3,3) * t(abarks|barks) / q(0|1,3,3) * t(abarks|NULL) + q(1|1,3,3) * t(abarks|the) + q(2|1,3,3) * t(abarks|dog) + q(3|1,3,3) * t(abarks|barks) = 
+0.1 * 0.3 / 0.1 * 0.2 + 0.4 * 0.1 + 0.4 * 0.4 + 0.1 * 0.3 = 0.03 / 0.25
