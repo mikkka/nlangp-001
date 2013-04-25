@@ -4,6 +4,9 @@
  * Time: 22:21
  */
 class Corpus(enCorpusPath: String, esCorpusPath: String) {
-  val en = FileIO.linesFromFile(enCorpusPath).map(line => line.split(" ").toVector).toVector
-  val es = FileIO.linesFromFile(esCorpusPath).map(line => line.split(" ").toVector).toVector
+  val NULL_WORLD = "__NULL__"
+
+  val eSentences = FileIO.linesFromFile(enCorpusPath).map(line => Vector(NULL_WORLD) ++ line.split(" ").toVector).toVector
+  val fSentences = FileIO.linesFromFile(esCorpusPath).map(line => line.split(" ").toVector).toVector
+  lazy val zipped = eSentences zip fSentences
 }
