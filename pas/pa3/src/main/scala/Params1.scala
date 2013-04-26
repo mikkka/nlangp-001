@@ -54,7 +54,45 @@ object Params1 {
       params.set(e, 1.0/n)
     }
 
+    for (i <- 1 to 5) {
+      trainStep(params, corpus)
+    }
+
     params
+  }
+
+  def trainStep(params: Params1, corpus: Corpus) : Unit = {
+    val cEF = mutable.Map.empty[String, mutable.Map[String, Double]]
+    val cE = mutable.Map.empty[String, Double]
+
+    def cef(e: String, f: String) = cEF.getOrElseUpdate(e, mutable.Map.empty[String, Double]).getOrElse(f, 0.0)
+    def cefset(e: String, f: String, v: Double) =
+      cEF.getOrElseUpdate(e, mutable.Map.empty[String, Double]).put(f, v)
+
+    def ce(e: String) = cE.getOrElseUpdate(e, 0.0)
+    def ceset(e: String, v: Double) = cE.put(e, v)
+
+    def teta(f: String, e: String, es: Vector[String]): Double = 0.0
+
+    for (
+      k <- 0 to corpus.length;
+      (es, fs) = corpus.zipped(k);
+      i <- 0 to fs.size;
+      j <- 0 to es.size;
+      e = es(j);
+      f = fs(i)
+    ) {
+
+      cefset(e, f, cef(e, f) + teta(f, e, es))
+      ceset(e, ce(e) + teta(f, e, es))
+    }
+
+    cEF.foreach(_ match {
+      case (e, fMap) => {
+        fMap.foreach(fVal => params.set(fVal._1, e, fVal._2))
+      }
+    })
+
   }
 
   //train params 1 from file
