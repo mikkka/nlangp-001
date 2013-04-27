@@ -72,7 +72,7 @@ object Params1 {
     def ce(e: String) = cE.getOrElseUpdate(e, 0.0)
     def ceset(e: String, v: Double) = cE.put(e, v)
 
-    def teta(f: String, e: String, es: Vector[String]): Double = 0.0
+    def teta(f: String, e: String, es: Vector[String]): Double = params.t(f, e) / es.map(params.t(f, _)).sum
 
     for (
       k <- 0 to corpus.length;
