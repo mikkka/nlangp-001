@@ -102,7 +102,7 @@ object Params1 {
     val p = new Params1
     FileIO.linesFromFile(file).foreach{l: String =>
       val splitted = l.split(" ")
-      p.set(splitted(0), splitted(1), splitted(2).toDouble)
+      p.put(splitted(1), splitted(0), splitted(2).toDouble)
     }
     p
   }
