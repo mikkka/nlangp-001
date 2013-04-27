@@ -58,6 +58,7 @@ object Params1 {
       println("step " + i)
       trainStep(params, corpus)
     }
+    println("train complete")
 
     params
   }
