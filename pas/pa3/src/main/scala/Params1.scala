@@ -55,6 +55,7 @@ object Params1 {
     }
 
     for (i <- 1 to 5) {
+      println("step " + i)
       trainStep(params, corpus)
     }
 
@@ -75,10 +76,10 @@ object Params1 {
     def teta(f: String, e: String, es: Vector[String]): Double = params.t(f, e) / es.map(params.t(f, _)).sum
 
     for (
-      k <- 0 to corpus.length;
+      k <- 0 to corpus.length - 1;
       (es, fs) = corpus.zipped(k);
-      i <- 0 to fs.size;
-      j <- 0 to es.size;
+      i <- 0 to fs.length - 1;
+      j <- 0 to es.length - 1;
       e = es(j);
       f = fs(i)
     ) {
