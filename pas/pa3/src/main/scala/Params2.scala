@@ -10,7 +10,7 @@ class Params2 {
   private val jilmVal = mutable.Map.empty[(Int, Int, Int, Int), Double]
 
 
-  def q(j: Int, i: Int, l: Int, m: Int) = jilmVal((j, i, l, m))
+  def q(j: Int, i: Int, l: Int, m: Int) = jilmVal(j, i, l, m)
 
   def set(j: Int, i: Int, l: Int, m: Int, q: Double) {
     val key = (j, i, l, m)
@@ -33,14 +33,15 @@ object Params2 {
     val params2 = new Params2
     //init
     for (
-      ef <- corpus.zipped;
-      e = ef._1;
-      f = ef._2;
-      i <- 0 to f.length - 1;
-      j <- 0 to e.length - 1
+      k <- 0 to corpus.length - 1;
+      (es, fs) = corpus.zipped(k);
+      i <- 0 to fs.length - 1;
+      j <- 0 to es.length - 1
     ) {
+      val l = es.length
+      val m = fs.length
       // e sentence contains _NULL_ so no need l + 1
-      params2.put(j, i, f.length, e.length, 1.0 / e.length)
+      params2.put(j, i, l, m, 1.0 / l)
     }
 
     for (i <- 1 to 5) {
@@ -64,9 +65,12 @@ object Params2 {
     def ce(e: String) = cE.getOrElseUpdate(e, 0.0)
     def ceset(e: String, v: Double) = cE.put(e, v)
 
-    def teta(i: Int, j: Int, f: String, e: String, es: Vector[String]): Double =
-      (params2.q(j, i, e.length, f.length) * params1.t(f, e)) /
-        (es.zipWithIndex.map(ei => params1.t(f, ei._1) * params2.q(ei._2, i, e.length, f.length)).sum)
+    def teta(i: Int, j: Int, f: String, e: String, fs: Vector[String], es: Vector[String]): Double = {
+      val l = es.length
+      val m = fs.length
+      (params2.q(j, i, l, m) * params1.t(f, e)) /
+        (es.zipWithIndex.map(ei => params1.t(f, ei._1) * params2.q(ei._2, i, l, m)).sum)
+    }
 
     for (
       k <- 0 to corpus.length - 1;
@@ -76,9 +80,9 @@ object Params2 {
       e = es(j);
       f = fs(i)
     ) {
-      val l = e.length
-      val m = f.length
-      val t = teta(i, j, f, e, es)
+      val l = es.length
+      val m = fs.length
+      val t = teta(i, j, f, e, fs, es)
 
       cJILM.put((j,i, l, m), cJILM.getOrElse((j,i, l, m), 0.0) + t)
       cILM.put((i, l, m), cILM.getOrElse((i, l, m), 0.0) + t)
