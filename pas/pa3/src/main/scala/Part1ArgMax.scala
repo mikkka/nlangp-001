@@ -8,16 +8,26 @@ object Part1ArgMax extends App {
   val corpus = new Corpus(args(1), args(2))
 
   val aligns = (for (
-    tEF <- corpus.zipped.zipWithIndex
+    tEF <- corpus.zipped
   ) yield {
-    val eSentence = tEF._1._1
-    val fSentence = tEF._1._2
-    val i = tEF._2
+    val eSentence = tEF._1
+    val fSentence = tEF._2
 
     fSentence.zipWithIndex.map{fWord =>
       (fWord, eSentence.zipWithIndex.maxBy(eWord => params1.t(fWord._1, eWord._1)))
     }
   })
 
-  println(aligns)
+  FileIO.withPrintWriter(args(3)){pw =>
+    for (
+      s <- aligns.zipWithIndex;
+      a <- s._1;
+      if (a._2._2 > 0);
+      i = s._2 + 1
+    ) {
+      val from = a._2._2
+      val to = a._1._2 + 1
+      pw.println(s"$i $from $to")
+    }
+  }
 }
