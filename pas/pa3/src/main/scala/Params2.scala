@@ -44,6 +44,7 @@ object Params2 {
     }
 
     for (i <- 1 to 5) {
+      println("train " + i)
       trainStep(params2, corpus, params1)
     }
 
