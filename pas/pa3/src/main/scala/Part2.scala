@@ -8,5 +8,6 @@ object Part2 extends App {
   val params1 = Params1(args(2))
   val params2 = Params2(corp, params1)
 
-  Params2.save(params2, args(3))
+  Params1.save(params1, args(3))
+  Params2.save(params2, args(4))
 }
