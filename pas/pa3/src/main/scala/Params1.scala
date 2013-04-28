@@ -91,7 +91,7 @@ object Params1 {
 
     cEF.foreach(_ match {
       case (e, fMap) => {
-        fMap.foreach(fVal => params.set(fVal._1, e, fVal._2))
+        fMap.foreach(fVal => params.set(fVal._1, e, fVal._2 / ce(e)))
       }
     })
 
