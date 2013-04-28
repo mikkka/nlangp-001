@@ -25,7 +25,7 @@ class Params1 {
     Unit
   }
 
-  private def set(f: String, e: String, v: Double): Unit = {
+  def set(f: String, e: String, v: Double): Unit = {
     efval(e).update(f, v)
     Unit
   }
