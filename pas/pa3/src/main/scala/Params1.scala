@@ -84,9 +84,9 @@ object Params1 {
       e = es(j);
       f = fs(i)
     ) {
-
-      cefset(e, f, cef(e, f) + teta(f, e, es))
-      ceset(e, ce(e) + teta(f, e, es))
+      val t = teta(f, e, es)
+      cefset(e, f, cef(e, f) + t)
+      ceset(e, ce(e) + t)
     }
 
     cEF.foreach(_ match {
