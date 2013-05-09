@@ -12,7 +12,7 @@ trait LocalFeatureSet {
   def add(params: Array[String], i: Int)
 
   // scan tagged sentence for features
-  def findFeatures(sentence: Array[(String,String)])
+  def findFeatures(sentence: Array[WordTag])
 
   // feature idx and string representation
   def toMap: Map[Int, Array[String]]
@@ -74,15 +74,15 @@ abstract class MapLikeFeatures extends LocalFeatureSet {
 
 class TagFeatures extends MapLikeFeatures {
   val keyGen = TagKeyGen
-  def findFeatures(sentence: Array[(String,String)]) {
-    sentence.foreach(wordTag => add(Array(wordTag._1, wordTag._2), 0))
+  def findFeatures(sentence: Array[WordTag]) {
+    sentence.foreach(wordTag => add(Array(wordTag.word, wordTag.tag), 0))
   }
 }
 
 class TrigramsFeatures extends MapLikeFeatures {
   val keyGen = TrigramKeyGen
-  def findFeatures(sentence: Array[(String,String)]) {
-    sentence.sliding(3).foreach(slice => add(Array(slice(0)._2, slice(1)._2, slice(2)._2), 0))
+  def findFeatures(sentence: Array[(WordTag)]) {
+    sentence.sliding(3).foreach(slice => add(Array(slice(0).tag, slice(1).tag, slice(2).tag), 0))
   }
 }
 
