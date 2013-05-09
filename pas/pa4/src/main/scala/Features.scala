@@ -6,7 +6,7 @@ import scala.collection.mutable
  */
 trait LocalFeatureSet {
   // list of lighted up features
-  def g(tag_2: String, tag_1: String, sentence: Vector[String], i: Int, t: String): List[Int]
+  def g(tag_2: String, tag_1: String, sentence: Array[String], i: Int, t: String): List[Int]
 
   // add feature in string representation with idx i
   def add(params: Array[String], i: Int)
@@ -19,7 +19,7 @@ trait LocalFeatureSet {
 }
 
 trait KeyGen {
-  def apply(tag_2: String, tag_1: String, sentence: Vector[String], i: Int, t: String): String
+  def apply(tag_2: String, tag_1: String, sentence: Array[String], i: Int, t: String): String
   def apply(params: Array[String]): String
   def apply(params: String*): String
   def fromKey(key: String): Array[String]
@@ -28,7 +28,7 @@ trait KeyGen {
 object TagKeyGen extends KeyGen {
   def key(word: String, tag: String) = word + ":" + tag
 
-  def apply(tag_2: String, tag_1: String, sentence: Vector[String], i: Int, t: String) =
+  def apply(tag_2: String, tag_1: String, sentence: Array[String], i: Int, t: String) =
     key(sentence(i), tag_1)
 
   def apply(params: Array[String]) =
@@ -43,7 +43,7 @@ object TagKeyGen extends KeyGen {
 object TrigramKeyGen extends KeyGen {
   def key(tag_2: String, tag_1: String, tag: String) = tag_2 + ":" + tag_1 + ":" + tag
 
-  def apply(tag_2: String, tag_1: String, sentence: Vector[String], i: Int, t: String) =
+  def apply(tag_2: String, tag_1: String, sentence: Array[String], i: Int, t: String) =
     key(tag_2, tag_1, t)
 
   def apply(params: Array[String]) =
@@ -60,7 +60,7 @@ abstract class MapLikeFeatures extends LocalFeatureSet {
   val keyGen: KeyGen
 
   // list of lighted up features
-  def g(tag_2: String, tag_1: String, sentence: Vector[String], i: Int, t: String): List[Int] =
+  def g(tag_2: String, tag_1: String, sentence: Array[String], i: Int, t: String): List[Int] =
     keyToIdx.get(keyGen(tag_2, tag_2, sentence, i, t)).toList
 
   // add feature in string representation with idx i
