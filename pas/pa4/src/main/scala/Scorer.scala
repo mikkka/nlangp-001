@@ -11,5 +11,10 @@ object Scorer {
     }
   }
 
-  def f(taggedSentence: Vector[(String,String)], features: Set[LocalFeatureSet]) = ???
+  //feature idx -> number of encounter
+  def f(taggedSentence: Array[WordTag], features: Set[LocalFeatureSet]): Map[Int,Int]  = {
+    features.foldLeft(Map.empty[Int, Int]) {(acc, lfs) =>
+      acc ++ lfs.g(taggedSentence)
+    }
+  }
 }

@@ -7,6 +7,8 @@ import scala.collection.mutable
 trait LocalFeatureSet {
   // list of lighted up features
   def g(tag_2: String, tag_1: String, sentence: Array[String], i: Int, t: String): List[Int]
+  // find features idx with num of encounter
+  def g(sentence: Array[WordTag]): Map[Int, Int]
 
   // add feature in string representation with idx i
   def add(params: Array[String], i: Int)
@@ -62,6 +64,17 @@ abstract class MapLikeFeatures extends LocalFeatureSet {
   // list of lighted up features
   def g(tag_2: String, tag_1: String, sentence: Array[String], i: Int, t: String): List[Int] =
     keyToIdx.get(keyGen(tag_2, tag_2, sentence, i, t)).toList
+
+  def g(sentence: Array[WordTag]): Map[Int, Int] = {
+    (for (i <- 2 to (sentence.length - 1))
+      yield g(sentence(i - 2).tag, sentence(i - 1).tag, sentence.map(_.word), i, sentence(i).tag)).
+    foldLeft(Map.empty[Int, Int]) {(acc, fs) =>
+      fs.foldLeft(acc) {(facc, fidx) =>
+        val num = facc.getOrElse(fidx, 0)
+        acc + (fidx -> (num + 1))
+      }
+    }
+  }
 
   // add feature in string representation with idx i
   def add(params: Array[String], i: Int) {
