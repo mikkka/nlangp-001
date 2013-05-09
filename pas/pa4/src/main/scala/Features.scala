@@ -1,4 +1,5 @@
 import scala.collection.mutable
+import Aliases._
 /**
  * User: mick
  * Date: 08.05.13
@@ -6,22 +7,22 @@ import scala.collection.mutable
  */
 trait LocalFeatureSet {
   // list of lighted up features
-  def g(tag_2: String, tag_1: String, sentence: Array[String], i: Int, t: String): List[Int]
+  def g(tag_2: Tag, tag_1: Tag, sentence: Array[Word], i: Int, t: Tag): List[Int]
   // find features idx with num of encounter
-  def g(sentence: Array[WordTag]): Map[Int, Int]
+  def g(sentence: TaggedSentence): FVector
 
   // add feature in string representation with idx i
   def add(params: Array[String], i: Int)
 
   // scan tagged sentence for features
-  def findFeatures(sentence: Array[WordTag])
+  def findFeatures(sentence: TaggedSentence)
 
   // feature idx and string representation
   def toMap: Map[Int, Array[String]]
 }
 
 trait KeyGen {
-  def apply(tag_2: String, tag_1: String, sentence: Array[String], i: Int, t: String): String
+  def apply(tag_2: Tag, tag_1: Tag, sentence: Array[Word], i: Int, t: Tag): String
   def apply(params: Array[String]): String
   def apply(params: String*): String
   def fromKey(key: String): Array[String]
@@ -30,7 +31,7 @@ trait KeyGen {
 object TagKeyGen extends KeyGen {
   def key(word: String, tag: String) = word + ":" + tag
 
-  def apply(tag_2: String, tag_1: String, sentence: Array[String], i: Int, t: String) =
+  def apply(tag_2: Tag, tag_1: Tag, sentence: Array[Word], i: Int, t: Tag) =
     key(sentence(i), tag_1)
 
   def apply(params: Array[String]) =
@@ -45,7 +46,7 @@ object TagKeyGen extends KeyGen {
 object TrigramKeyGen extends KeyGen {
   def key(tag_2: String, tag_1: String, tag: String) = tag_2 + ":" + tag_1 + ":" + tag
 
-  def apply(tag_2: String, tag_1: String, sentence: Array[String], i: Int, t: String) =
+  def apply(tag_2: Tag, tag_1: Tag, sentence: Array[Word], i: Int, t: Tag) =
     key(tag_2, tag_1, t)
 
   def apply(params: Array[String]) =
@@ -62,10 +63,10 @@ abstract class MapLikeFeatures extends LocalFeatureSet {
   val keyGen: KeyGen
 
   // list of lighted up features
-  def g(tag_2: String, tag_1: String, sentence: Array[String], i: Int, t: String): List[Int] =
+  def g(tag_2: Tag, tag_1: Tag, sentence: Array[Word], i: Int, t: Tag): List[Int] =
     keyToIdx.get(keyGen(tag_2, tag_2, sentence, i, t)).toList
 
-  def g(sentence: Array[WordTag]): Map[Int, Int] = {
+  def g(sentence: TaggedSentence): FVector = {
     (for (i <- 2 to (sentence.length - 1))
       yield g(sentence(i - 2).tag, sentence(i - 1).tag, sentence.map(_.word), i, sentence(i).tag)).
     foldLeft(Map.empty[Int, Int]) {(acc, fs) =>
@@ -87,14 +88,14 @@ abstract class MapLikeFeatures extends LocalFeatureSet {
 
 class TagFeatures extends MapLikeFeatures {
   val keyGen = TagKeyGen
-  def findFeatures(sentence: Array[WordTag]) {
+  def findFeatures(sentence: TaggedSentence) {
     sentence.foreach(wordTag => add(Array(wordTag.word, wordTag.tag), 0))
   }
 }
 
 class TrigramsFeatures extends MapLikeFeatures {
   val keyGen = TrigramKeyGen
-  def findFeatures(sentence: Array[(WordTag)]) {
+  def findFeatures(sentence: TaggedSentence) {
     sentence.sliding(3).foreach(slice => add(Array(slice(0).tag, slice(1).tag, slice(2).tag), 0))
   }
 }
