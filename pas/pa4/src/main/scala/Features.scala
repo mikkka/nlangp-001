@@ -18,53 +18,71 @@ trait LocalFeatureSet {
   def toMap: Map[Int, Array[String]]
 }
 
-class TagFeatures extends LocalFeatureSet {
-  val wordTagToIdxMap = mutable.Map.empty[String, Int]
-
-  def key(word: String, tag: String) = word + ":" + tag
-
-  def g(tag_2: String, tag_1: String, sentence: Vector[String], i: Int, t: String): List[Int] =
-    wordTagToIdxMap.get(key(sentence(i), tag_1)).toList
-
-  //word, tag
-  def add(params: Array[String], i: Int) {
-    add(params(0), params(1), i)
-  }
-
-  def add(word: String, tag: String, i: Int) {
-    wordTagToIdxMap.put(key(word, tag), i)
-  }
-
-  def findFeatures(sentence: Array[(String,String)]) {
-    sentence.foreach(wordTag => add(wordTag._1, wordTag._2, 0))
-  }
-
-  // just reverse the map
-  def toMap: Map[Int, Array[String]] = wordTagToIdxMap.map(kv => (kv._2, kv._1.split(":"))).toMap
+trait KeyGen {
+  def apply(tag_2: String, tag_1: String, sentence: Vector[String], i: Int, t: String): String
+  def apply(params: Array[String]): String
+  def apply(params: String*): String
+  def fromKey(key: String): Array[String]
 }
 
-class TrigramsFeatures extends LocalFeatureSet {
-  val tag1tag2ToIdxMap = mutable.Map.empty[String, Int]
+object TagKeyGen extends KeyGen {
+  def key(word: String, tag: String) = word + ":" + tag
 
+  def apply(tag_2: String, tag_1: String, sentence: Vector[String], i: Int, t: String) =
+    key(sentence(i), tag_1)
+
+  def apply(params: Array[String]) =
+    key(params(0), params(1))
+
+  def apply(params: String*) =
+    key(params(0), params(1))
+
+  def fromKey(key: String) = key.split(":")
+}
+
+object TrigramKeyGen extends KeyGen {
   def key(tag_2: String, tag_1: String, tag: String) = tag_2 + ":" + tag_1 + ":" + tag
 
+  def apply(tag_2: String, tag_1: String, sentence: Vector[String], i: Int, t: String) =
+    key(tag_2, tag_1, t)
+
+  def apply(params: Array[String]) =
+    key(params(0), params(1), params(2))
+
+  def apply(params: String*) =
+    key(params(0), params(1), params(2))
+
+  def fromKey(key: String) = key.split(":")
+}
+
+abstract class MapLikeFeatures extends LocalFeatureSet {
+  val keyToIdx = mutable.Map.empty[String, Int]
+  val keyGen: KeyGen
+
+  // list of lighted up features
   def g(tag_2: String, tag_1: String, sentence: Vector[String], i: Int, t: String): List[Int] =
-    tag1tag2ToIdxMap.get(key(tag_2, tag_1, t)).toList
+    keyToIdx.get(keyGen(tag_2, tag_2, sentence, i, t)).toList
 
-  //tag_2, tag_1, tag
+  // add feature in string representation with idx i
   def add(params: Array[String], i: Int) {
-    add(params(0), params(1), params(2), i)
+    keyToIdx.put(keyGen(params), i)
   }
 
-  def add(tag_2: String, tag_1: String, tag: String, i: Int) {
-    tag1tag2ToIdxMap.put(key(tag_2, tag_1, tag), i)
-  }
+  // feature idx and string representation
+  def toMap: Map[Int, Array[String]] = keyToIdx.map(kv => (kv._2, keyGen.fromKey(kv._1))).toMap
+}
 
+class TagFeatures extends MapLikeFeatures {
+  val keyGen = TagKeyGen
   def findFeatures(sentence: Array[(String,String)]) {
-    sentence.sliding(3).foreach(slice => add(slice(0)._2, slice(1)._2, slice(2)._2, 0))
+    sentence.foreach(wordTag => add(Array(wordTag._1, wordTag._2), 0))
   }
+}
 
-  // just reverse the map
-  def toMap: Map[Int, Array[String]] =  tag1tag2ToIdxMap.map(kv => (kv._2, kv._1.split(":"))).toMap
+class TrigramsFeatures extends MapLikeFeatures {
+  val keyGen = TrigramKeyGen
+  def findFeatures(sentence: Array[(String,String)]) {
+    sentence.sliding(3).foreach(slice => add(Array(slice(0)._2, slice(1)._2, slice(2)._2), 0))
+  }
 }
 
