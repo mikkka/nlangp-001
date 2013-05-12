@@ -134,6 +134,22 @@ class SuffixKeyGen(val length: Int) extends KeyGen {
   def fromKey(key: String) = key.split(":")
 }
 
+class PrefixKeyGen(val length: Int) extends KeyGen {
+  def key(word: String, tag: String) = word.take(length) + ":" + tag
+
+  def apply(tag_2: Tag, tag_1: Tag, sentence: Array[Word], i: Int, t: Tag) =
+    if (i >= sentence.length || sentence(i).length < length) None
+    else Some(key(sentence(i), t))
+
+  def apply(params: Array[String]) =
+    key(params(0), params(1))
+
+  def apply(params: String*) =
+    key(params(0), params(1))
+
+  def fromKey(key: String) = key.split(":")
+}
+
 class WordPartFeatures(val keyGen: KeyGen, val length: Int) extends MapLikeFeatures {
   def findFeatures(sentence: TaggedSentence) {
     sentence.foreach(wordTag =>
