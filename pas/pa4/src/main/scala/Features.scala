@@ -19,6 +19,10 @@ trait LocalFeatureSet {
 
   // feature idx and string representation
   def toMap: Map[Int, Array[String]]
+
+  def shift(num: Int)
+
+  def size: Int
 }
 
 trait KeyGen {
@@ -89,6 +93,14 @@ abstract class MapLikeFeatures extends LocalFeatureSet {
 
   // feature idx and string representation
   def toMap: Map[Int, Array[String]] = keyToIdx.map(kv => (kv._2, keyGen.fromKey(kv._1))).toMap
+
+  def shift(num: Int) {
+    val newMap = keyToIdx.map(t => (t._1 -> t._2))
+    keyToIdx.clear()
+    keyToIdx ++ newMap
+  }
+
+  def size = keyToIdx.size
 }
 
 class TagFeatures extends MapLikeFeatures {
