@@ -36,10 +36,10 @@ object Algs {
     }
 
     val tagsTail = (for(
-      u <- S(n - 2);
-      s <- S(n - 1)
+      u <- S(n - 1);
+      s <- S(n)
     ) yield {
-      ((pi(n-1, u, s)._1 + Scorer.vg(v, features, u, s, xs, n, tailTag)) -> (u, s))
+      ((pi(n, u, s)._1 + Scorer.vg(v, features, u, s, xs, n + 1, tailTag)) -> (u, s))
     }).maxBy(_._1)._2
 
     val retval = new Array[String](n + 1)
