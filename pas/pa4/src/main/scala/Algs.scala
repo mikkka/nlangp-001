@@ -22,7 +22,6 @@ object Algs {
       else tags
 
     for (k <- 0 to n) {
-      val xk = xs(k)
       for (
         u <- S(k-1);
         s <- S(k)
@@ -39,7 +38,8 @@ object Algs {
       u <- S(n - 1);
       s <- S(n)
     ) yield {
-      ((pi(n, u, s)._1 + Scorer.vg(v, features, u, s, xs, n + 1, tailTag)) -> (u, s))
+      val score = Scorer.vg(v, features, u, s, xs, n + 1, tailTag)
+      ((pi(n, u, s)._1 + score) -> (u, s))
     }).maxBy(_._1)._2
 
     val retval = new Array[String](n + 1)

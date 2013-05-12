@@ -9,7 +9,10 @@ object Scorer {
   def vg(v: V, features: Set[LocalFeatureSet],
          tag_2: Tag, tag_1: Tag, sentence: Sentence, i: Int, t: Tag): Double = {
     features.foldLeft(0.0) {(sum, lfs) =>
-      sum + lfs.g(tag_2, tag_1, sentence, i, t).foldLeft(0.0)(_ + v(_))
+      val vIdx = lfs.g(tag_2, tag_1, sentence, i, t)
+      sum + vIdx.foldLeft(0.0)((acc, idx) =>
+        acc + v(idx)
+      )
     }
   }
 
