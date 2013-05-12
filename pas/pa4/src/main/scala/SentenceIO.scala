@@ -17,6 +17,16 @@ object SentenceIO {
     sentencesForTag.map(sentence => sentence.drop(2).dropRight(1).map(_.word).toArray)
   }
 
+  def readTaggedSentences(fileName: String): Vector[TaggedSentence] = {
+    val wordsForTag = FileIO.linesFromFile(fileName).map{line: String =>
+      val str = line.trim()
+      if(!str.isEmpty) WordTag(str, "")
+      else WordTag("", "STOP")
+    }.toList
+
+    val sentencesForTag = toSentences(wordsForTag)
+    sentencesForTag.map(sentence => sentence.toArray)
+  }
 
   def toSentences(words: List[WordTag]) = {
     def iter(acc: Vector[Vector[WordTag]], tail: List[WordTag]) : Vector[Vector[WordTag]] = {
