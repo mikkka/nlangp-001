@@ -134,9 +134,7 @@ class SuffixKeyGen(val length: Int) extends KeyGen {
   def fromKey(key: String) = key.split(":")
 }
 
-class SuffixFeatures(val length: Int) extends MapLikeFeatures {
-  val keyGen = new SuffixKeyGen(length)
-
+class WordPartFeatures(val keyGen: KeyGen, val length: Int) extends MapLikeFeatures {
   def findFeatures(sentence: TaggedSentence) {
     sentence.foreach(wordTag =>
       if (wordTag.word.length >= length) {

@@ -10,9 +10,9 @@ object Part2 extends App {
 
   val trigramFeatures = new TrigramsFeatures
   val tagFeatures = new TagFeatures
-  val suffix1features = new SuffixFeatures(1)
-  val suffix2features = new SuffixFeatures(2)
-  val suffix3features = new SuffixFeatures(3)
+  val suffix1features = new WordPartFeatures(new SuffixKeyGen(1), 1)
+  val suffix2features = new WordPartFeatures(new SuffixKeyGen(2), 2)
+  val suffix3features = new WordPartFeatures(new SuffixKeyGen(3), 3)
   val featureSet: Set[LocalFeatureSet] =
     Set(trigramFeatures, tagFeatures, suffix1features, suffix2features, suffix3features)
 
