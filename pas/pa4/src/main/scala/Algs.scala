@@ -64,7 +64,7 @@ object Algs {
         val xs = goldTagging.map(_.word)
         val bestTagging = viterbi(v, features, xs)
 
-        if (bestTagging != goldTagging) {
+        if (bestTagging.toList != goldTagging.toList) {
           val goldTaggingV = Scorer.f(goldTagging, features)
           val bestTaggingV = Scorer.f(bestTagging, features)
 
