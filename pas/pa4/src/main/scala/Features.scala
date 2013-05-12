@@ -8,7 +8,7 @@ import Aliases._
 trait LocalFeatureSet {
   // list of lighted up features
   def g(tag_2: Tag, tag_1: Tag, sentence: Array[Word], i: Int, t: Tag): List[Int]
-  // find features idx with num of encounter
+  // find features idx with 1(no encounter num)
   def g(sentence: TaggedSentence): FVector
 
   // add feature in string representation with idx i
@@ -80,7 +80,7 @@ abstract class MapLikeFeatures extends LocalFeatureSet {
     foldLeft(Map.empty[Int, Int]) {(acc, fs) =>
       fs.foldLeft(acc) {(facc, fidx) =>
         val num = facc.getOrElse(fidx, 0)
-        acc + (fidx -> (num + 1))
+        acc + (fidx -> 1)
       }
     }
   }
