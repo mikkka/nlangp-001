@@ -18,11 +18,10 @@ object SentenceIO {
   }
 
   def readTaggedSentences(fileName: String): Vector[TaggedSentence] = {
-    val wordsForTag = FileIO.linesFromFile(fileName).map{line: String =>
-      val str = line.trim()
-      if(!str.isEmpty) WordTag(str, "")
-      else WordTag("", "STOP")
-    }.toList
+    val wordsForTag = FileIO.linesFromFile(fileName).map( _.trim().split(" ") match {
+      case Array(word, tag) => WordTag(word, tag)
+      case _ => WordTag("", "STOP")
+    }).toList
 
     val sentencesForTag = toSentences(wordsForTag)
     sentencesForTag.map(sentence => sentence.toArray)
