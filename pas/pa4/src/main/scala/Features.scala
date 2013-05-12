@@ -32,8 +32,8 @@ object TagKeyGen extends KeyGen {
   def key(word: String, tag: String) = word + ":" + tag
 
   def apply(tag_2: Tag, tag_1: Tag, sentence: Array[Word], i: Int, t: Tag) =
-    if (i >= sentence.length) key("__NULL__", tag_1)
-    else key(sentence(i), tag_1)
+    if (i >= sentence.length) key("__NULL__", t)
+    else key(sentence(i), t)
 
   def apply(params: Array[String]) =
     key(params(0), params(1))
