@@ -20,7 +20,7 @@ object Part3 extends App {
   val featureSet: Set[LocalFeatureSet] =
     Set(trigramFeatures, tagFeatures,
       suffix1features, suffix2features, suffix3features,
-      prefix1features, prefix2features, prefix3features
+      prefix2features, prefix3features
     )
 
   //find all features in input
