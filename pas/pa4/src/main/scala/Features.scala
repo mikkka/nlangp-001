@@ -26,7 +26,7 @@ trait LocalFeatureSet {
 }
 
 trait KeyGen {
-  def apply(tag_2: Tag, tag_1: Tag, sentence: Array[Word], i: Int, t: Tag): String
+  def apply(tag_2: Tag, tag_1: Tag, sentence: Array[Word], i: Int, t: Tag): Option[String]
   def apply(params: Array[String]): String
   def apply(params: String*): String
   def fromKey(key: String): Array[String]
@@ -36,8 +36,8 @@ object TagKeyGen extends KeyGen {
   def key(word: String, tag: String) = word + ":" + tag
 
   def apply(tag_2: Tag, tag_1: Tag, sentence: Array[Word], i: Int, t: Tag) =
-    if (i >= sentence.length) key("__NULL__", t)
-    else key(sentence(i), t)
+    if (i >= sentence.length) None
+    else Some(key(sentence(i), t))
 
   def apply(params: Array[String]) =
     key(params(0), params(1))
@@ -52,7 +52,7 @@ object TrigramKeyGen extends KeyGen {
   def key(tag_2: String, tag_1: String, tag: String) = tag_2 + ":" + tag_1 + ":" + tag
 
   def apply(tag_2: Tag, tag_1: Tag, sentence: Array[Word], i: Int, t: Tag) =
-    key(tag_2, tag_1, t)
+    Some(key(tag_2, tag_1, t))
 
   def apply(params: Array[String]) =
     key(params(0), params(1), params(2))
@@ -69,7 +69,10 @@ abstract class MapLikeFeatures extends LocalFeatureSet {
 
   // list of lighted up features
   def g(tag_2: Tag, tag_1: Tag, sentence: Array[Word], i: Int, t: Tag): List[Int] =
-    keyToIdx.get(keyGen(tag_2, tag_1, sentence, i, t)).toList
+    keyGen(tag_2, tag_1, sentence, i, t) match {
+      case Some(key) => keyToIdx.get(key).toList
+      case None => List.empty
+    }
 
   def g(sentence: TaggedSentence): FVector = {
     (for (i <- 2 to (sentence.length - 1))
@@ -119,8 +122,8 @@ class SuffixKeyGen(val length: Int) extends KeyGen {
   def key(word: String, tag: String) = word.takeRight(length) + ":" + tag
 
   def apply(tag_2: Tag, tag_1: Tag, sentence: Array[Word], i: Int, t: Tag) =
-    if (i >= sentence.length) key("__NULL__", t)
-    else key(sentence(i), t)
+    if (i >= sentence.length || sentence(i).length < length) None
+    else Some(key(sentence(i), t))
 
   def apply(params: Array[String]) =
     key(params(0), params(1))
@@ -135,7 +138,11 @@ class SuffixFeatures(val length: Int) extends MapLikeFeatures {
   val keyGen = new SuffixKeyGen(length)
 
   def findFeatures(sentence: TaggedSentence) {
-    sentence.foreach(wordTag => add(Array(wordTag.word, wordTag.tag), 0))
+    sentence.foreach(wordTag =>
+      if (wordTag.word.length >= length) {
+        Const.tags.foreach(tag => add(Array(wordTag.word, tag), 0))
+      }
+    )
   }
 }
 
