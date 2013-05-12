@@ -14,19 +14,16 @@ object Part2 extends App {
   val suffix2features = new SuffixFeatures(2)
   val suffix3features = new SuffixFeatures(3)
   //find all features in input
+  val featureSet: Set[LocalFeatureSet] =
+    Set(trigramFeatures, tagFeatures, suffix1features, suffix2features, suffix3features)
 
   ss.foreach{xs =>
-    trigramFeatures.findFeatures(xs)
-    tagFeatures.findFeatures(xs)
-    suffix1features.findFeatures(xs)
-    suffix2features.findFeatures(xs)
-    suffix3features.findFeatures(xs)
+    featureSet.foreach(_.findFeatures(xs))
   }
+  featureSet.foldLeft(0)((acc, f) => f.shift(acc))
 
-  suffix3features.shift(suffix2features.shift(suffix1features.shift(tagFeatures.shift(trigramFeatures.shift(0)))))
-
-  val v = Algs.perceptron(ss, Set(trigramFeatures, tagFeatures))
+  val v = Algs.perceptron(ss, featureSet)
 
   val sentences = SentenceIO.readSentences(args(1))
-  SentenceIO.writeTagged(args(2), sentences.map(s => Algs.viterbi(v, Set(trigramFeatures, tagFeatures), s)))
+  SentenceIO.writeTagged(args(2), sentences.map(s => Algs.viterbi(v, featureSet, s)))
 }
