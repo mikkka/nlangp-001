@@ -65,7 +65,7 @@ abstract class MapLikeFeatures extends LocalFeatureSet {
 
   // list of lighted up features
   def g(tag_2: Tag, tag_1: Tag, sentence: Array[Word], i: Int, t: Tag): List[Int] =
-    keyToIdx.get(keyGen(tag_2, tag_2, sentence, i, t)).toList
+    keyToIdx.get(keyGen(tag_2, tag_1, sentence, i, t)).toList
 
   def g(sentence: TaggedSentence): FVector = {
     (for (i <- 2 to (sentence.length - 1))
