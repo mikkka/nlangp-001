@@ -14,7 +14,7 @@ object Algs {
    * @return
    */
   def viterbi(v: V, features: Set[LocalFeatureSet], xs: Sentence): TaggedSentence = {
-    val pi = scala.collection.mutable.Map((0, headTag, headTag) -> (0.0, headTag))
+    val pi = scala.collection.mutable.Map((-1, headTag, headTag) -> (0.0, headTag))
     val n = xs.length - 1
 
     def S(k: Int) =
@@ -41,11 +41,12 @@ object Algs {
     ) yield {
       ((pi(n-1, u, s)._1 + Scorer.vg(v, features, u, s, xs, n, tailTag)) -> (u, s))
     }).maxBy(_._1)._2
-    val retval = new Array[String](n)
-    retval(n-1) = tagsTail._2
-    retval(n-2) = tagsTail._1
 
-    for(k <- (n - 3) to 0 by -1) {
+    val retval = new Array[String](n + 1)
+    retval(n) = tagsTail._2
+    retval(n-1) = tagsTail._1
+
+    for(k <- (n - 2) to 0 by -1) {
       val i = k
       retval(i) = pi(k + 2, retval(i + 1), retval(i + 2))._2
     }
