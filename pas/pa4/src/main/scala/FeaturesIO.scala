@@ -17,8 +17,13 @@ object FeaturesIO {
       val partsAndParam = l.split(" ")
       val parts = partsAndParam(0).split(":")
       parts(0) match {
-        case "TAG" => tagFeatures.add(parts.drop(1), counter)
+        case "TAG" => {
+          val fixedParts = parts.drop(1).dropRight(1)
+          val tag = parts.last
+          tagFeatures.add(Array(fixedParts.mkString(":"), tag), counter)
+        }
         case "TRIGRAM" => trigramFeatures.add(parts.drop(1), counter)
+        case _ => throw new IllegalStateException("bad input : " + l)
       }
       v = v :+ partsAndParam.last.toDouble
       counter = counter+1

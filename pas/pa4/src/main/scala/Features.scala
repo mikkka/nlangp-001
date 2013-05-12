@@ -80,7 +80,11 @@ abstract class MapLikeFeatures extends LocalFeatureSet {
 
   // add feature in string representation with idx i
   def add(params: Array[String], i: Int) {
-    keyToIdx.put(keyGen(params), i)
+    val key = keyGen(params)
+    if (keyToIdx.contains(key))
+      throw new IllegalStateException("key already exists : " + key)
+    else
+      keyToIdx.put(keyGen(params), i)
   }
 
   // feature idx and string representation
