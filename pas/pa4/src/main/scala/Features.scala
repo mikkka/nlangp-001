@@ -85,19 +85,16 @@ abstract class MapLikeFeatures extends LocalFeatureSet {
   // add feature in string representation with idx i
   def add(params: Array[String], i: Int) {
     val key = keyGen(params)
-    if (keyToIdx.contains(key))
-      throw new IllegalStateException("key already exists : " + key)
-    else
-      keyToIdx.put(keyGen(params), i)
+    keyToIdx.put(keyGen(params), i)
   }
 
   // feature idx and string representation
   def toMap: Map[Int, Array[String]] = keyToIdx.map(kv => (kv._2, keyGen.fromKey(kv._1))).toMap
 
   def shift(num: Int) {
-    val newMap = keyToIdx.map(t => (t._1 -> t._2))
+    val newMap = keyToIdx.toList.zipWithIndex.map(t => (t._1._1 -> (t._1._2 + num + t._2)))
     keyToIdx.clear()
-    keyToIdx ++ newMap
+    keyToIdx ++= newMap
   }
 
   def size = keyToIdx.size
