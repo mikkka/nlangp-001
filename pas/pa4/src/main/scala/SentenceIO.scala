@@ -35,7 +35,7 @@ object SentenceIO {
     FileIO.withPrintWriter(fileName) {pw =>
       taggedSentences.foreach{s =>
         s.foreach(wt => pw.println(wt.word + " " + wt.tag))
-        println("")
+        pw.println("")
       }
     }
   }
