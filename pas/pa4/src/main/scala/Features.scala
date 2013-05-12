@@ -20,7 +20,7 @@ trait LocalFeatureSet {
   // feature idx and string representation
   def toMap: Map[Int, Array[String]]
 
-  def shift(num: Int)
+  def shift(num: Int): Int
 
   def size: Int
 }
@@ -91,10 +91,11 @@ abstract class MapLikeFeatures extends LocalFeatureSet {
   // feature idx and string representation
   def toMap: Map[Int, Array[String]] = keyToIdx.map(kv => (kv._2, keyGen.fromKey(kv._1))).toMap
 
-  def shift(num: Int) {
+  def shift(num: Int): Int = {
     val newMap = keyToIdx.toList.zipWithIndex.map(t => (t._1._1 -> (t._1._2 + num + t._2)))
     keyToIdx.clear()
     keyToIdx ++= newMap
+    num + keyToIdx.size
   }
 
   def size = keyToIdx.size
@@ -111,6 +112,30 @@ class TrigramsFeatures extends MapLikeFeatures {
   val keyGen = TrigramKeyGen
   def findFeatures(sentence: TaggedSentence) {
     sentence.sliding(3).foreach(slice => add(Array(slice(0).tag, slice(1).tag, slice(2).tag), 0))
+  }
+}
+
+class SuffixKeyGen(val length: Int) extends KeyGen {
+  def key(word: String, tag: String) = word.takeRight(length) + ":" + tag
+
+  def apply(tag_2: Tag, tag_1: Tag, sentence: Array[Word], i: Int, t: Tag) =
+    if (i >= sentence.length) key("__NULL__", t)
+    else key(sentence(i), t)
+
+  def apply(params: Array[String]) =
+    key(params(0), params(1))
+
+  def apply(params: String*) =
+    key(params(0), params(1))
+
+  def fromKey(key: String) = key.split(":")
+}
+
+class SuffixFeatures(val length: Int) extends MapLikeFeatures {
+  val keyGen = new SuffixKeyGen(length)
+
+  def findFeatures(sentence: TaggedSentence) {
+    sentence.foreach(wordTag => add(Array(wordTag.word, wordTag.tag), 0))
   }
 }
 
