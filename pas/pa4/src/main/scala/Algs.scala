@@ -54,30 +54,35 @@ object Algs {
     xs.zipWithIndex.map(p => WordTag(p._1, retval(p._2)))
   }
 
-  def perceptron(ss: Vector[TaggedSentence], features: Set[LocalFeatureSet]) {
+  def perceptron(ss: Vector[TaggedSentence], features: Set[LocalFeatureSet]) = {
     val size = features.foldLeft(0){(acc, f) => acc + f.size}
     var v = Array.fill[Double](size)(0).toVector
 
     for (i <- 1 to 5) {
       for (taggedSentence <- ss) {
-        val goldTagging = taggedSentence.drop(1).dropRight(2)
-        val xs = goldTagging.map(_.word)
-        val bestTagging = viterbi(v, features, xs)
+        if (taggedSentence.length > 4) {
+          val goldTagging = taggedSentence.drop(1).dropRight(2)
+          val xs = goldTagging.map(_.word)
+          val bestTagging = viterbi(v, features, xs)
 
-        if (bestTagging.toList != goldTagging.toList) {
-          val goldTaggingV = Scorer.f(goldTagging, features)
-          val bestTaggingV = Scorer.f(bestTagging, features)
+          if (bestTagging.toList != goldTagging.toList) {
+            val goldTaggingV = Scorer.f(goldTagging, features)
+            val bestTaggingV = Scorer.f(bestTagging, features)
 
-          v = goldTaggingV.foldLeft(v){(res, t) =>
-            val curVal = res(t._1)
-            res.updated(t._1, curVal + t._2)
+            v = goldTaggingV.foldLeft(v){(res, t) =>
+              val curVal = res(t._1)
+              res.updated(t._1, curVal + t._2)
+            }
+            v = bestTaggingV.foldLeft(v){(res, t) =>
+              val curVal = res(t._1)
+              res.updated(t._1, curVal - t._2)
+            }
           }
-          v = bestTaggingV.foldLeft(v){(res, t) =>
-            val curVal = res(t._1)
-            res.updated(t._1, curVal - t._2)
-          }
+        } else {
+          println("bad tagged sentence : " + taggedSentence.toList.toString())
         }
       }
     }
+    v
   }
 }
